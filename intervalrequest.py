@@ -1,11 +1,10 @@
 import time, threading, requests
 
 time = 1
-url = 'https://6e1099e6.ngrok.io/arduino'
+url = 'http://bb56fb9c.ngrok.io/arduino/dispense'
 result = requests.get(url = url)
 def request():
-    data = result.json()
+    data = result.content
     print(data)
     threading.Timer(time, request).start()
-
 request()
