@@ -34,10 +34,6 @@ router.post('/newschedule', function(req, res, next) {
   var pill = req.headers.pill
   var user = req.headers.user
 
-  console.log(date)
-  console.log(pill)
-  console.log(user)
-
   database.ref(`/Schedule/`).push({
     user: user,
     pill: pill,
