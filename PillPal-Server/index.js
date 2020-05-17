@@ -30,7 +30,7 @@ express()
             date: date,
         })
     })
-    .post('/arduino/dispense', async function (req, res) {
+    .get('/arduino/dispense', async function (req, res) {
         let myVal = await database.ref('/Patients').orderByChild('name').equalTo("Arya Tschand").once("value");
         myVal = myVal.val();
         if (myVal) {
@@ -141,12 +141,17 @@ express()
         res.send("0");
     })
     .post('/website/signUp', async function (req, res) {
+        console.log("Signup request started");
         let info = req.headers;
         let email = info.email;
+        console.log(`Email: ${email}`);
         let firstName = info.firstname;
         let lastName = info.lastname;
+        console.log(`Name: ${firstName} ${lastName}`);
         let password = info.password;
         let passwordConfirm = info.passwordconfirm;
+        let passwordEncrypt = hash(password);
+        console.log(`Password: ${passwordEncrypt}`);
         let userType = info.usertype;
         let patientType = info.patienttype;
         let pillJson = info.pilljson;
@@ -194,11 +199,6 @@ express()
                 }
             }
         } else {
-            console.log(`pills: ${pillJson}`);
-            console.log(pillJson == "");
-            console.log(pillJson == null);
-            console.log(pillJson == undefined);
-
             if (!email) {
                 returnVal = {
                     data: 'Please enter an email address.'
@@ -242,7 +242,7 @@ express()
             } else {
                 database.ref(`Patients/${firstName} ${lastName}/email`).set(email);
                 database.ref(`Patients/${firstName} ${lastName}/name`).set(`${firstName} ${lastName}`);
-                database.ref(`Patients/${firstName} ${lastName}/password`).set(hash(password));
+                database.ref(`Patients/${firstName} ${lastName}/password`).set(passwordEncrypt);
                 database.ref(`Patients/${firstName} ${lastName}/patientType`).set(patientType);
                 database.ref(`Patients/${firstName} ${lastName}/pills`).set(pillJson);
                 database.ref(`Patients/${firstName} ${lastName}/requested`).set("none");
